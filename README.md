@@ -5,6 +5,18 @@ A python library to generate latex code for flowcharts.
 
 Max Isacson
 
+Usage
+-----
+Create a file 'myfile.fm' or something. In it define you nodes, for example:
+'''
+node 0 {Start here} symbol start connect 1;
+node 1 {Yes or No?} symbol query connect 2,3;
+node 2 {You answered "yes"} symbol action connect 4;
+node 3 {You answered "no"} symbol action connect 4;
+node 4 {It ends here} symbol stop;
+'''
+
+
 TODO
 ----
 - Write the damn thing.
