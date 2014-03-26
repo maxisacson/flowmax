@@ -1,7 +1,5 @@
 validSymbols = ['start', 'query', 'q', 'action', 'a', 'stop']
 
-
-
 def connect(n1, n2):
 	n1.connectTo(n2)
 	n2.connectTo(n1)
