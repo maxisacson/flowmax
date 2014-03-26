@@ -2,20 +2,47 @@ import sys
 
 validSymbols = ['start', 'query', 'action', 'stop']
 
-def connect(n1, n2):
-	n1.connectTo(n2)
-	n2.connectTo(n1)
+def connectByLabel(n1, n2):
+	n1.connectToByLabel(n2)
+	n2.connectToByLabel(n1)
 
-def isConnected(n1,n2):
-	if (n1.isConnectedTo(n2) and n2.isConnectedTo(n1)):
+def connectByIndex(n1, n2):
+	n1.connectToByIndex(n2)
+	n2.connectToByIndex(n1)
+
+def connect(n1,n2):
+	connectByLabel(n1,n2)
+	connectByIndex(n1,n2)
+
+def isConnectedByLabel(n1,n2):
+	if (n1.isConnectedToByLabel(n2) and n2.isConnectedToByLabel(n1)):
 		return True
 	else:
 		return False
+
+def isConnectedByIndex(n1,n2):
+	if (n1.isConnectedToByIndex(n2) and n2.isConnectedToByIndex(n1)):
+		return True
+	else:
+		return False
+
+def getNodeByLabel(i):
+	for n in node.nodes:
+		if (n.label == i):
+			return n
 
 def getNodeByIndex(i):
 	for n in node.nodes:
 		if (n.index == i):
 			return n
+
+def createNodes(container):
+	for c in container:
+		node(c[0], c[1], c[2])
+	for n in node.nodes:
+		if container[n.index][3] is not None:
+			for l in container[n.index][3]:
+				connect(n, getNodeByLabel(l))
 
 def readFrom(template):
 	validIdentifiers = ['node', '{', '}', 'symbol', 'connect', ';']
@@ -98,14 +125,19 @@ def readFrom(template):
 			break
 		elif (tempString == ';'):
 			endOfLine = True
-	for x in container:
-		print x
+	return container
+
+def printNodes():
+	for n in node.nodes:
+		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to " + str(n.connectedToByLabel)
 
 def run(_file):
 	#try:
 		template = open(_file, 'r')
 		print 'Running over ' + template.name
-		readFrom(template)
+		container = readFrom(template)
+		createNodes(container)
+		printNodes()
 	#except IOError as e:
 	#	print 'I/O Error({0}): {1}'.format(e.errno, e.strerror)
 	#except:
@@ -117,35 +149,44 @@ class node(object):
 	"""basic node for flowchart"""
 	nNodes	=	0
 	nodes		=	[]
-	def __init__(self, text = '', symbol = 'action', x = 0, y = 0):
-		self.text = text
+	def __init__(self, label, text = '', symbol = 'action', x = 0, y = 0):
+		self.label	=	label
+		self.text	=	text
 		if (symbol in validSymbols):
-			if (symbol == 'a'):
-				self.symbol = 'action'
-			elif (symbol == 'q'):
-				self.symbol = 'query'
-			else:
-				self.symbol = symbol
+			self.symbol = symbol
 		else:
 			print "*** Symbol '" + symbol + "' is NOT a valid symbol!"
 			exit(-1)
-		self.x				=	x
-		self.y				=	y
-		self.height			=	0
-		self.width			=	0
-		self.connectedTo	=	[]
-		self.index			=	node.nNodes
-		node.nNodes			+=	1
+		self.x						=	x
+		self.y						=	y
+		self.height					=	0
+		self.width					=	0
+		self.connectedToByIndex	=	[]
+		self.connectedToByLabel	=	[]
+		self.index					=	node.nNodes
+		node.nNodes					+=	1
 		node.nodes.append(self)
-	
-	def isConnectedTo(self, other):
-		if (other.index in self.connectedTo):
+
+	def isConnectedToByLabel(self, other):
+		if (other.label in self.connectedToByLabel):
 			return True
 		else:
 			return False
 
-	def connectTo(self, other):
-		if (not self.isConnectedTo(other)):
-			self.connectedTo.append(other.index)
+	def isConnectedToByIndex(self, other):
+		if (other.index in self.connectedToByIndex):
+			return True
+		else:
+			return False
+
+	def connectToByLabel(self, other):
+		if (not self.isConnectedToByLabel(other)):
+			self.connectedToByLabel.append(other.label)
+		else:
+			pass
+
+	def connectToByIndex(self, other):
+		if (not self.isConnectedToByIndex(other)):
+			self.connectedToByIndex.append(other.index)
 		else:
 			pass

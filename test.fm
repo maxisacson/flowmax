@@ -1,0 +1,5 @@
+node 0 {Start here} symbol start connect 1;
+node 1 {Yes or no?} symbol query connect 2,3;
+node 2 {You said yes} symbol action connect 4;
+node 3 {You said no} symbol action connect 4;
+node 4 {It ends here} symbol stop;
