@@ -20,21 +20,15 @@ def getNodeByIndex(i):
 def readFrom(template):
 	validIdentifiers = ['node', '{', '}', 'symbol', 'connect']
 	container = []
-	ind = 0
-	buf = 4
 	endOfLine = False
 	endOfFile = False
-	iter1 = 0
 	while True:
-		iter1+=1
-		print "iter1 = " + str(iter1)
 		tempString = ''
 		if (endOfLine):
 			container.append([uIndex, text, symb, cnct])
 			endOfLine = False
 		while True:
 			byte = template.read(1)
-	#		print template.tell()
 			if (byte == ''):
 				endOfFile = True
 				break;
@@ -43,17 +37,13 @@ def readFrom(template):
 			else:
 				tempString += byte
 			if (tempString in validIdentifiers):
-				print tempString
 				break
 		if (endOfFile):
 			break
-		#print tempString
 		if (tempString == 'node'):
-		#	print tempString
 			tmpIndex = ''
 			while True:
 				byte = template.read(1)
-			#	print template.tell()
 				if (byte.isspace() and tmpIndex == ''):
 					pass
 				elif (byte.isspace()):
@@ -62,21 +52,16 @@ def readFrom(template):
 					tmpIndex += byte
 			uIndex = int(tmpIndex)
 		elif (tempString == '{'):
-			#print tempString
 			text = ''
 			while True:
 				byte = template.read(1)
-			#	print template.tell()
 				if (byte == '}'):
-					#print byte
 					break
 				text += byte
 		elif (tempString == 'symbol'):
-			#print tempString
 			symb = ''
 			while True:
 				byte = template.read(1)
-			#	print template.tell()
 				if (byte.isspace() and symb == ''):
 					pass
 				elif (byte.isspace()):
@@ -89,17 +74,14 @@ def readFrom(template):
 				endOfLine = True
 				endOfFile = True
 		elif (tempString == 'connect'):
-			#print tempString
 			cnct = []
 			tmpCnct = ''
 			while True:
 				byte = template.read(1)
-			#	print template.tell()
 				if (byte == ';'):
 					cnct.append(int(tmpCnct))
 					endOfLine = True
 					tmpCnct = ''
-					#print endOfLine
 					break
 				elif (byte == ','):
 					cnct.append(int(tmpCnct))
@@ -108,12 +90,6 @@ def readFrom(template):
 					pass
 				else:
 					tmpCnct += byte	
-	#		print cnct
-	#		elif (endOfLine):
-	#		print uIndex
-	#		container.append([uIndex, text, symb, cnct])
-	#		print container
-			#tempString = ''
 		elif (tempString == ''):
 			break
 	for x in container:
