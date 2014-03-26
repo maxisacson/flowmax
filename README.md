@@ -1,7 +1,7 @@
 FlowMax
 =======
 
-A python script to generate latex code for flowcharts.
+A python library to generate latex code for flowcharts.
 
 Max Isacson
 
