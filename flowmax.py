@@ -31,6 +31,7 @@ def readFrom(template):
 		tempString = ''
 		if (endOfLine):
 			container.append([uIndex, text, symb, cnct])
+			endOfLine = False
 		while True:
 			byte = template.read(1)
 	#		print template.tell()
@@ -44,6 +45,8 @@ def readFrom(template):
 			if (tempString in validIdentifiers):
 				print tempString
 				break
+		if (endOfFile):
+			break
 		#print tempString
 		if (tempString == 'node'):
 		#	print tempString
@@ -83,6 +86,7 @@ def readFrom(template):
 				if (symb in validSymbols):
 					break
 			if (symb == 'stop'):
+				endOfLine = True
 				endOfFile = True
 		elif (tempString == 'connect'):
 			#print tempString
@@ -111,9 +115,9 @@ def readFrom(template):
 	#		print container
 			#tempString = ''
 		elif (tempString == ''):
-			endOfFile = True
 			break
-	print container;
+	for x in container:
+		print x
 
 def run(_file):
 	#try:
