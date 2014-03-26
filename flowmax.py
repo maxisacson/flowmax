@@ -18,7 +18,7 @@ def getNodeByIndex(i):
 			return n
 
 def readFrom(template):
-	validIdentifiers = ['node', '{', '}', 'symbol', 'connect']
+	validIdentifiers = ['node', '{', '}', 'symbol', 'connect', ';']
 	container = []
 	endOfLine = False
 	endOfFile = False
@@ -27,6 +27,10 @@ def readFrom(template):
 		if (endOfLine):
 			container.append([uIndex, text, symb, cnct])
 			endOfLine = False
+			uIndex = None
+			text = None
+			symb = None
+			cnct = None
 		while True:
 			byte = template.read(1)
 			if (byte == ''):
@@ -92,6 +96,8 @@ def readFrom(template):
 					tmpCnct += byte	
 		elif (tempString == ''):
 			break
+		elif (tempString == ';'):
+			endOfLine = True
 	for x in container:
 		print x
 
