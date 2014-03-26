@@ -26,3 +26,7 @@ flowmax.run("myfile.fm")
 TODO
 ----
 - Write the damn thing.
+
+LICENSE
+-------
+This project is distributed under the GNU General Public License https://www.gnu.org/licenses/gpl-3.0.txt
