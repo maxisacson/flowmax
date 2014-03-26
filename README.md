@@ -15,6 +15,12 @@ node 2 {You answered "yes"} symbol action connect 4;
 node 3 {You answered "no"} symbol action connect 4;
 node 4 {It ends here} symbol stop;
 ```
+Then you can run the library on the file, like so:
+```
+import flowmax
+
+flowmax.run("myfile.fm")
+```
 
 
 TODO
