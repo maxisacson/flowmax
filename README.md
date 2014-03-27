@@ -3,7 +3,8 @@ FlowMax
 
 A python library to generate latex code for flowcharts.
 
-Max Isacson
+Max Isacson, max.isacson@cern.ch
+Tikz stuff by Johan Asplund, johan.asplund@math.uu.se
 
 Usage
 -----
