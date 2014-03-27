@@ -15,7 +15,7 @@ node 1 {Yes or No?} symbol query connect 2,3;
 node 2 {You answered "yes"} symbol action connect 4;
 node 3 {You answered "no"} symbol action connect 4;
 node 4 {It ends here} symbol stop;
-```
+```python
 Then you can run the library on the file, like so:
 ```
 import flowmax
