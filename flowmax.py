@@ -84,6 +84,23 @@ def createNodes(container):
 				connect(n, getNodeByLabel(l))
 				flow(n, getNodeByLabel(l))
 
+def initLayers():
+	maxDepth = -1;
+	for n in node.nodes:
+		if n.dist > maxDepth:
+			maxDepth = n.dist
+	for i in range(maxDepth + 1):
+		layers.append([])
+	for n in node.nodes:
+		if not n.symbol == 'stop':
+			layers[n.dist].append(n.label)
+		elif n.symbol == 'stop':
+			layers.append([n.label])
+
+def printLayers():
+	for l in layers:
+		print l
+
 def djikstra():
 	unvisited = []
 	current = 0;
@@ -100,7 +117,6 @@ def djikstra():
 		if n.index in unvisited:
 			for i in n.flowsToByIndex:
 				m = getNodeByIndex(i)
-				print m.label
 				if n.dist + 1 < m.dist:
 					m.setDist(n.dist + 1)
 			unvisited.remove(n.index)
@@ -207,7 +223,10 @@ def run(_file):
 		container = readFrom(template)
 		createNodes(container)
 		djikstra()
+		initLayers()
 		printNodes()
+		print "\nLayers"
+		printLayers()
 	#except IOError as e:
 	#	print 'I/O Error({0}): {1}'.format(e.errno, e.strerror)
 	#except:
@@ -293,3 +312,31 @@ class node(object):
 
 	def setDist(self, d):
 		self.dist = d
+
+#	def distTo(self, other):
+#		unvisited = []
+#		distances = []
+#		current = self.index
+#		dest = other.index
+#		for n in node.nodes:
+#			unvisited.append(n.index)
+#			distances.append(float('inf'))
+#		distances[self.index] = 0
+#		while True:
+#			n = getNodeByIndex(current)
+#			if n.index in unvisited:
+#				for i in n.connectedToByIndex:
+#					m = getNodeByIndex(i)
+#					if distances[n.index] + 1 < distances[m.index]:
+#						distances[m.index] = distances[n.index] + 1
+#				unvisited.remove(n.index)
+#			if dest not in unvisited:
+#				break
+#			for i in unvisited:
+#				minDist = float('inf')
+#				n = getNodeByIndex(i)
+#				if distances[n.index] < minDist:
+#					current = n.index
+#					minDist = distances[n.index]
+#		return distances[dest]
+						
