@@ -151,7 +151,6 @@ def run(_file):
 	#try:
 		template = open(_file, 'r')
 		print 'Running over ' + template.name
-		global container
 		container = readFrom(template)
 		createNodes(container)
 		printNodes()

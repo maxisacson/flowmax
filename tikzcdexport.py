@@ -10,24 +10,30 @@ def makeFig(nodes,target):
 	kodindex = figdata.index("%Code goes here\n")+1
 
 	#Loop through each node and insert tikz code in .tex file
-	for i in xrange(0,len(nodes)):
-		nodenr = nodes[i][0]
-		nodetext = nodes[i][1]
-		nodeshape = nodes[i][2]
-		nodeto = nodes[i][3]
+	for n in nodes:
+		#Grabbing info about node
+		i = n.index
+		nodenr = n.label
+		nodetext = n.text
+		nodeshape = n.symbol
+		nodeto = n.connectedToByIndex
+
+		#Just for proof of concept
+		displacement = str(len(nodeto)-1)
 
 		#Create nodes
 		if nodeshape == "start" or nodeshape == "stop":
-			figdata.insert(kodindex+i,"\\node[start-stop] at (0,-2*"+str(i)+") ("+str(nodenr)+") {"+nodetext+"};\n")
-		elif nodeshape == "query":
-			figdata.insert(kodindex+i,"\\node[query=1.6] at (0,-2*"+str(i)+") ("+str(nodenr)+") {"+nodetext+"};\n")
+			figdata.insert(kodindex+i,"\\node[start-stop] at (2*"+displacement+",-2*"+str(i)+") ("+str(nodenr)+") {"+nodetext+"};\n")
 		else:
-			figdata.insert(kodindex+i,"\\node["+nodeshape+"] at (0,-2*"+str(i)+") ("+str(nodenr)+") {"+nodetext+"};\n")
+			figdata.insert(kodindex+i,"\\node["+nodeshape+"] at (2*"+displacement+",-2*"+str(i)+") ("+str(nodenr)+") {"+nodetext+"};\n")	
+
 		#Create arrows
 		if nodeto == None:
 			pass
 		else:
-			figdata.insert(kodindex+i+1,"\\draw[->] ("+str(nodenr)+") -- ("+str(nodeto[0])+");\n")
+			for c in nodeto:
+				figdata.insert(kodindex+i+1,"\\draw[->] ("+str(nodenr)+") -- ("+str(c)+");\n")	
+			
 
 	#Create/append new target file
 	tar = open(target+".tex","a")
@@ -36,4 +42,4 @@ def makeFig(nodes,target):
 	#Write in the target
 	with open(target+".tex","w") as file:
 		file.writelines(figdata)
-
+		
