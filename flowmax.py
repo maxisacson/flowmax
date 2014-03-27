@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>."""
 
 import sys
 
-validSymbols = ['start', 'query', 'action', 'stop']
+validSymbols 	=	['start', 'query', 'action', 'stop']
+layers			=	[]
 
 def connectByLabel(n1, n2):
 	n1.connectToByLabel(n2)
@@ -82,6 +83,35 @@ def createNodes(container):
 			for l in container[n.index][3]:
 				connect(n, getNodeByLabel(l))
 				flow(n, getNodeByLabel(l))
+
+def djikstra():
+	unvisited = []
+	current = 0;
+	dest = 0;
+	for n in node.nodes:
+		unvisited.append(n.index)
+		if n.symbol == 'start':
+			n.setDist(0)
+			current = n.index
+		if n.symbol == 'stop':
+			dest = n.index
+	while True:
+		n = getNodeByIndex(current)
+		if n.index in unvisited:
+			for i in n.flowsToByIndex:
+				m = getNodeByIndex(i)
+				print m.label
+				if n.dist + 1 < m.dist:
+					m.setDist(n.dist + 1)
+			unvisited.remove(n.index)
+		if len(unvisited) == 0:
+			break
+		for i in unvisited:
+			minDist = float('inf')
+			n = getNodeByIndex(i)
+			if (n.dist < minDist):
+					current = n.index
+					minDist = n.dist
 
 def readFrom(template):
 	validIdentifiers = ['node', '{', '}', 'symbol', 'connect', ';']
@@ -168,7 +198,7 @@ def readFrom(template):
 
 def printNodes():
 	for n in node.nodes:
-		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to node(s) " + str(n.connectedToByLabel) + " and flows to node(s) " + str(n.flowsToByLabel)
+		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to node(s) " + str(n.connectedToByLabel) + " and flows to node(s) " + str(n.flowsToByLabel) + " with distance " + str(n.dist)
 
 def run(_file):
 	#try:
@@ -176,6 +206,7 @@ def run(_file):
 		print 'Running over ' + template.name
 		container = readFrom(template)
 		createNodes(container)
+		djikstra()
 		printNodes()
 	#except IOError as e:
 	#	print 'I/O Error({0}): {1}'.format(e.errno, e.strerror)
@@ -205,6 +236,7 @@ class node(object):
 		self.flowsToByIndex		=	[]
 		self.flowsToByLabel		=	[]
 		self.index					=	node.nNodes
+		self.dist					=	float('inf')
 		node.nNodes					+=	1
 		node.nodes.append(self)
 
@@ -255,3 +287,9 @@ class node(object):
 			self.connectedToByIndex.append(other.index)
 		else:
 			pass
+
+	def getDist(self):
+		return self.dist
+
+	def setDist(self, d):
+		self.dist = d
