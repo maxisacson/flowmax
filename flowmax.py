@@ -42,6 +42,28 @@ def isConnectedByIndex(n1,n2):
 	else:
 		return False
 
+def flowByLabel(n1, n2):
+	n1.flowToByLabel(n2)
+
+def flowByIndex(n1, n2):
+	n1.flowToByIndex(n2)
+
+def flow(n1, n2):
+	flowByLabel(n1, n2)
+	flowByIndex(n1, n2)
+
+def isFlowsToByLabel(n1, n2):
+	if (n1.isFlowsToByLabel(n2)):
+		return True
+	else:
+		return False
+
+def isFlowsToByIndex(n1, n2):
+	if (n1.isFlowsToByIndex(n2)):
+		return True
+	else:
+		return False
+
 def getNodeByLabel(i):
 	for n in node.nodes:
 		if (n.label == i):
@@ -59,6 +81,7 @@ def createNodes(container):
 		if container[n.index][3] is not None:
 			for l in container[n.index][3]:
 				connect(n, getNodeByLabel(l))
+				flow(n, getNodeByLabel(l))
 
 def readFrom(template):
 	validIdentifiers = ['node', '{', '}', 'symbol', 'connect', ';']
@@ -145,7 +168,7 @@ def readFrom(template):
 
 def printNodes():
 	for n in node.nodes:
-		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to " + str(n.connectedToByLabel)
+		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to node(s) " + str(n.connectedToByLabel) + " and flows to node(s) " + str(n.flowsToByLabel)
 
 def run(_file):
 	#try:
@@ -179,6 +202,8 @@ class node(object):
 		self.width					=	0
 		self.connectedToByIndex	=	[]
 		self.connectedToByLabel	=	[]
+		self.flowsToByIndex		=	[]
+		self.flowsToByLabel		=	[]
 		self.index					=	node.nNodes
 		node.nNodes					+=	1
 		node.nodes.append(self)
@@ -194,6 +219,30 @@ class node(object):
 			return True
 		else:
 			return False
+
+	def isFlowsToByIndex(self, other):
+		if (other.index in self.flowsToByIndex):
+			return True
+		else:
+			return False
+
+	def isFlowsToByLabel(self, other):
+		if (other.label in self.flowsToByLabel):
+			return True
+		else:
+			return False
+
+	def flowToByLabel(self, other):
+		if (not self.isFlowsToByLabel(other)):
+			self.flowsToByLabel.append(other.label)
+		else:
+			pass
+
+	def flowToByIndex(self, other):
+		if (not self.isFlowsToByIndex(other)):
+			self.flowsToByIndex.append(other.index)
+		else:
+			pass
 
 	def connectToByLabel(self, other):
 		if (not self.isConnectedToByLabel(other)):
