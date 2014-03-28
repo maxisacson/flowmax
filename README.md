@@ -4,11 +4,11 @@ FlowMax
 A python library to generate latex code for flow charts.
 
 
-Max Isacson, max.isacson@cern.ch, tikz stuff by Johan Asplund, johan.asplund@math.uu.se
+Max Isacson, max.isacson@cern.ch, tikz stuff by Johan Asplund, johan.asplund@math.uu.se.
 
 Usage
 -----
-Create a file 'myfile.fm' or something. In it define you nodes, for example:
+Create a file `myfile.fm` or something. In it define your nodes, for example:
 ```
 node 0 {Start here} symbol start connect 1;
 node 1 {Yes or No?} symbol query {Yes}{No} connect 2,3;
@@ -24,11 +24,15 @@ import tikzexport
 flowmax.run("myfile.fm")
 tikzexport.makeFig(flowmax.node.nodes,"target")
 ```
+or simply `$ flowmax myfile.fm`.
+
+This will give you a file called `target.tex` (`out.tex` in the latter)  which you can compile with e.g. `pdflatex`.
 
 TODO
 ----
 - Implement better arrows.
 - Fix bugs (mostly has to do with the arrows or nodes)
+- Improve the sorting algorithm
 
 LICENSE
 -------
