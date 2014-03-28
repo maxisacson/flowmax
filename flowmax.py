@@ -77,7 +77,7 @@ def getNodeByIndex(i):
 
 def createNodes(container):
 	for c in container:
-		node(c[0], c[1], c[2])
+		node(c[0], c[1], c[2], c[4])
 	for n in node.nodes:
 		if container[n.index][3] is not None:
 			for l in container[n.index][3]:
@@ -134,15 +134,21 @@ def readFrom(template):
 	container = []
 	endOfLine = False
 	endOfFile = False
+	uIndex = None
+	text = None
+	symb = None
+	cnct = None
+	routeLabels = []
 	while True:
 		tempString = ''
 		if (endOfLine):
-			container.append([uIndex, text, symb, cnct])
+			container.append([uIndex, text, symb, cnct, routeLabels])
 			endOfLine = False
 			uIndex = None
 			text = None
 			symb = None
 			cnct = None
+			routeLabels = []
 		while True:
 			byte = template.read(1)
 			if (byte == ''):
@@ -167,7 +173,7 @@ def readFrom(template):
 				else:
 					tmpIndex += byte
 			uIndex = int(tmpIndex)
-		elif (tempString == '{'):
+		elif (tempString == '{' and symb == None):
 			text = ''
 			while True:
 				byte = template.read(1)
@@ -189,6 +195,14 @@ def readFrom(template):
 			if (symb == 'stop'):
 				endOfLine = True
 				endOfFile = True
+		elif tempString == '{' and symb == 'query':
+			tempRouteLabel = ''
+			while True:
+				byte = template.read(1)
+				if byte == '}':
+					routeLabels.append(tempRouteLabel)
+					break
+				tempRouteLabel += byte
 		elif (tempString == 'connect'):
 			cnct = []
 			tmpCnct = ''
@@ -214,7 +228,7 @@ def readFrom(template):
 
 def printNodes():
 	for n in node.nodes:
-		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to node(s) " + str(n.connectedToByLabel) + " and flows to node(s) " + str(n.flowsToByLabel) + " with distance " + str(n.dist)
+		print "Node " + str(n.label) + " with content '" + n.text + "' of type '" + n.symbol + "' is connected to node(s) " + str(n.connectedToByLabel) + " and flows to node(s) " + str(n.flowsToByLabel) + " (" + str(n.routeLabels) + ") with distance " + str(n.dist) + " from start."
 
 def run(_file):
 	#try:
@@ -238,7 +252,7 @@ class node(object):
 	"""basic node for flowchart"""
 	nNodes	=	0
 	nodes		=	[]
-	def __init__(self, label, text = '', symbol = 'action', x = 0, y = 0):
+	def __init__(self, label, text = '', symbol = 'action', routeLabels = [], x = 0, y = 0):
 		self.label	=	label
 		self.text	=	text
 		if (symbol in validSymbols):
@@ -256,6 +270,7 @@ class node(object):
 		self.flowsToByLabel		=	[]
 		self.index					=	node.nNodes
 		self.dist					=	float('inf')
+		self.routeLabels			=	routeLabels
 		node.nNodes					+=	1
 		node.nodes.append(self)
 
