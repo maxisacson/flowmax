@@ -30,7 +30,7 @@ tikzexport.makeFig(flowmax.node.nodes,"target")
 ```
 or simply `$ flowmax myfile.fm` in a `BASH`-like shell environment.
 
-This will give you a file called `target.tex` (`out.tex` in the latter)  which you can compile with e.g. `pdflatex`.
+This will give you a file called `target.tex` (`out.tex` in the latter) which you can compile with e.g. `pdflatex`, `xelatex` or `lualatex`.
 
 TODO
 ----
