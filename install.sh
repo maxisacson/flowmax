@@ -4,6 +4,10 @@ if test -z $pypath; then
 	exit 1
 fi
 
+if test \! -d bin; then
+	mkdir bin
+fi
+
 if test -e bin/flowmax; then
 	echo "flowmax seems to already be installed"
 	exit 0
