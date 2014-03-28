@@ -35,8 +35,11 @@ def makeFig(nodes,target):
 		figdata = file.readlines()	
 	#print figdata
 
-	#Finds where to insert code
-	codei = figdata.index("%Code goes here\n")+1
+	#Finds where to insert nodes and arrows (arrows must succeed the nodes)
+	nodecodei = figdata.index("%Nodes goes here\n")+1
+	arri = figdata.index("%Arrows goes here\n")+1
+
+
 	#Loop through each node
 	for n in nodes:
 		#Grab info about each node
@@ -48,7 +51,7 @@ def makeFig(nodes,target):
 		xy = getxy(nodes)
 
 		#Create nodes
-		figdata.insert(codei+nodei,"\\node["+nodeshape+"] at ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+") ("+str(nodelbl)+") {"+nodetext+"};\n")
+		figdata.insert(nodecodei+nodei,"\\node["+nodeshape+"] at ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+") ("+str(nodelbl)+") {"+nodetext+"};\n")
 
 
 		#Create arrows
@@ -57,14 +60,14 @@ def makeFig(nodes,target):
 			diffy = xy[1][nodelbl]-xy[1][flw]
 			if nodelbl != flw:
 				if (abs(diffy) == 2 or abs(diffx) == 3):
-					figdata.insert(codei+nodelbl+1,"\\draw[->] ("+str(nodelbl)+") -- ("+str(flw)+");\n")
+					figdata.insert(arri+nodei+1,"\\draw[->] ("+str(nodelbl)+") -- ("+str(flw)+");\n")
 				elif diffy != 0:
 					if diffx == 0:
-						figdata.insert(codei+nodelbl+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
 					elif diffx > 0:
-						figdata.insert(codei+nodelbl+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
 					else:
-						figdata.insert(codei+nodelbl+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
 
 
 	#Create/append new target file
