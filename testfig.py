@@ -1,6 +1,6 @@
-import flowmax, tikzcdexport
+import flowmax, tikzexport
 
 flowmax.run("test.fm")
 nodes = flowmax.node.nodes
 
-tikzcdexport.makeFig(nodes,"target")
+tikzexport.makeFig(nodes,"target")

@@ -1,10 +1,10 @@
 FlowMax
 =======
 
-A python library to generate latex code for flowcharts.
+A python library to generate latex code for flow charts.
 
 
-Max Isacson, max.isacson@cern.ch, Tikz stuff by Johan Asplund, johan.asplund@math.uu.se
+Max Isacson, max.isacson@cern.ch, tikz stuff by Johan Asplund, johan.asplund@math.uu.se
 
 Usage
 -----
@@ -17,16 +17,18 @@ node 3 {You answered "no"} symbol action connect 4;
 node 4 {It ends here} symbol stop;
 ```
 Then you can run the library on the file, like so:
-```pyhton
+```python
 import flowmax
+import tikzcdexport
 
 flowmax.run("myfile.fm")
+tikzexport.makeFig(flowmax.node.nodes,"target")
 ```
-
 
 TODO
 ----
-- Write the damn thing.
+- Implement better arrows.
+- Fix bugs (mostly has to do with the arrows or nodes)
 
 LICENSE
 -------

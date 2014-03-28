@@ -23,7 +23,6 @@ def getxy(nodes):
 	for n in nodes:
 		#Grab some info about each node
 		nodei = n.index
-		nodelbl = n.label
 		nodepos = findHeight(flowmax.layers,nodei)
 		x.append(3*nodepos[1])
 		y.append(-2*nodepos[0])
