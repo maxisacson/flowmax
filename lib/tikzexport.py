@@ -1,4 +1,6 @@
 import flowmax, os
+xsize = 4
+ysize = 2
 
 def findHeight(lay,ind):
 	#First check whether ind lies in the list or not
@@ -24,10 +26,16 @@ def getxy(nodes):
 		#Grab some info about each node
 		nodei = n.index
 		nodepos = findHeight(flowmax.layers,nodei)
-		x.append(3*nodepos[1])
-		y.append(-2*nodepos[0])
-
+		x.append(xsize*nodepos[1])
+		y.append(-ysize*nodepos[0])
 	return [x,y]
+
+def layerSize(layers):
+	sizes = []
+	for l in layers:
+		sizes.append(len(l))
+	return sizes
+
 
 #Takes list of nodes defined in flowmax.node and produces a target .tex file containing tikz code
 def makeFig(nodes,target):
@@ -42,35 +50,53 @@ def makeFig(nodes,target):
 	nodecodei = figdata.index("%Nodes goes here\n")+1
 	arri = figdata.index("%Arrows goes here\n")+1
 
-
+	xy = getxy(nodes)
 	#Loop through each node
 	for n in nodes:
+
 		#Grab info about each node
+		nodetot = len(nodes)
 		nodei = n.index
 		nodelbl = n.label
 		nodetext = n.text
 		nodeshape = n.symbol
 		nodeto = n.flowsToByLabel
-		xy = getxy(nodes)
+		nodearrowlabel = n.routeLabels
+		
 
 		#Create nodes
 		figdata.insert(nodecodei+nodei,"\\node["+nodeshape+"] at ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+") ("+str(nodelbl)+") {"+nodetext+"};\n")
 
+		#print nodearrowlabel
+		#print nodeto
+		arlabelstrings = ['']*nodetot
+
+		if len(nodearrowlabel) > 0:
+			for i in xrange(0,len(nodearrowlabel)):
+				arlabelstrings.insert(nodeto[i],nodearrowlabel[i])
+
+		
 
 		#Create arrows
 		for flw in nodeto:
 			diffx = xy[0][nodelbl]-xy[0][flw]
 			diffy = xy[1][nodelbl]-xy[1][flw]
+			#Sets a value of the fill, and determine which arrows have labels
+			if arlabelstrings[flw] != '':
+				fillstring = "fill=white,"
+			else:
+				fillstring = ""
+
 			if nodelbl != flw:
-				if (abs(diffy) == 2 or abs(diffx) == 3):
-					figdata.insert(arri+nodei+1,"\\draw[->] ("+str(nodelbl)+") -- ("+str(flw)+");\n")
+				if (abs(diffy) == ysize or abs(diffx) == xsize):
+					figdata.insert(arri+nodei+1,"\\draw[->] ("+str(nodelbl)+") -- ("+str(flw)+") node [midway,"+fillstring+",tiny] {"+arlabelstrings[flw]+"} ;\n")
 				elif diffy != 0:
 					if diffx == 0:
-						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+"-"+str(ysize)+","+str(xy[1][nodelbl])+") -- ("+str(xy[0][nodelbl])+"-"+str(ysize)+","+str(xy[1][nodelbl])+"-"+str(diffy)+") node [midway,"+fillstring+",tiny] {"+arlabelstrings[flw]+"} -- ("+str(flw)+");\n")
 					elif diffx > 0:
-						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") node [midway,"+fillstring+",tiny] {"+arlabelstrings[flw]+"} -- ("+str(flw)+");\n")
 					else:
-						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+						figdata.insert(arri+nodei+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") node [midway,"+fillstring+",tiny] {"+arlabelstrings[flw]+"} -- ("+str(flw)+");\n")
 
 
 	#Create/append new target file
@@ -80,3 +106,6 @@ def makeFig(nodes,target):
 	#Write in the target
 	with open(target+".tex","w") as file:
 		file.writelines(figdata)
+
+
+
