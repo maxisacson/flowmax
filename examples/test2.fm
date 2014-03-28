@@ -1,0 +1,10 @@
+node 0 {Start here} symbol start connect 1;
+node 1 {Take a deep breath} symbol action connect 2;
+node 2 {Read} symbol action connect 3,4;
+node 3 {Read more?} symbol query connect 1,4;
+node 4 {Exam or not?} symbol query connect 5,6;
+node 5 {Exam} symbol action connect 9;
+node 6 {Not} symbol action connect 7;
+node 7 {You sure?} symbol query connect 5,8;
+node 8 {Dead} symbol action connect 9;
+node 9 {Win} symbol stop;
