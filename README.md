@@ -19,7 +19,7 @@ node 4 {It ends here} symbol stop;
 Then you can run the library on the file, like so:
 ```python
 import flowmax
-import tikzcdexport
+import tikzexport
 
 flowmax.run("myfile.fm")
 tikzexport.makeFig(flowmax.node.nodes,"target")
