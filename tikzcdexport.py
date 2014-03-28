@@ -1,5 +1,34 @@
 import flowmax
 
+def findHeight(lay,ind):
+	#First check whether ind lies in the list or not
+	try:
+		return lay.index(ind)
+	except ValueError:
+		pass
+
+	for i in xrange(0,len(lay)):
+		try:
+			lay[i].index(ind)
+		except ValueError:
+			pass
+		else:
+			return [i,lay[i].index(ind)]
+
+
+def getxy(nodes):
+	x = []
+	y = []
+	#Loop through each node
+	for n in nodes:
+		#Grab some info about each node
+		nodelbl = n.label
+		nodepos = findHeight(flowmax.layers,nodelbl)
+		x.append(3*nodepos[1])
+		y.append(-2*nodepos[0])
+
+	return [x,y]
+
 #Takes list of nodes defined in flowmax.node and produces a target .tex file containing tikz code
 def makeFig(nodes,target):
 	with open("template.tex","r") as file:
@@ -8,32 +37,35 @@ def makeFig(nodes,target):
 
 	#Finds where to insert code
 	codei = figdata.index("%Code goes here\n")+1
-
-	#Loop through each node and insert tikz code in .tex file
+	#Loop through each node
 	for n in nodes:
-		#Grabbing info about node
+		#Grab info about each node
 		nodei = n.index
-		nodenr = n.label
+		nodelbl = n.label
 		nodetext = n.text
 		nodeshape = n.symbol
-		nodeto = n.flowsToByIndex
-		nodedist = n.dist
+		nodeto = n.flowsToByLabel
+		xy = getxy(nodes)
 
-		#Create nodes. Sets text size in querys to tiny (otherwise the diamond will probably become huge).
-		if nodeshape == "start" or nodeshape == "stop":
-			figdata.insert(codei+nodei,"\\node[start-stop] at (2*"+str(nodedist)+",-2*"+str(nodei)+") ("+str(nodenr)+") {"+nodetext+"};\n")
-		elif nodeshape == "query":
-			figdata.insert(codei+nodei,"\\node["+nodeshape+"] at (2*"+str(nodedist)+",-2*"+str(nodei)+") ("+str(nodenr)+") {\\tiny{"+nodetext+"}};\n")
-		else:
-			figdata.insert(codei+nodei,"\\node["+nodeshape+"] at (2*"+str(nodedist)+",-2*"+str(nodei)+") ("+str(nodenr)+") {"+nodetext+"};\n")
+		#Create nodes
+		figdata.insert(codei+nodei,"\\node["+nodeshape+"] at ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+") ("+str(nodelbl)+") {"+nodetext+"};\n")
 
-		#Create arrows, checks if there is a flow from a node to itsef
-		for flowto in nodeto:
-			if nodenr == flowto:
-				pass
-			else:
-				figdata.insert(codei+nodei+1,"\\draw[->] ("+str(nodenr)+") -- ("+str(flowto)+");\n")
-			
+
+		#Create arrows
+		for flw in nodeto:
+			diffx = xy[0][nodelbl]-xy[0][flw]
+			diffy = xy[1][nodelbl]-xy[1][flw]
+			if nodelbl != flw:
+				if (abs(diffy) == 2 or abs(diffx) == 3):
+					figdata.insert(codei+nodelbl+1,"\\draw[->] ("+str(nodelbl)+") -- ("+str(flw)+");\n")
+				elif diffy != 0:
+					if diffx == 0:
+						figdata.insert(codei+nodelbl+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+") -- ("+str(xy[0][nodelbl])+"-2,"+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+					elif diffx > 0:
+						figdata.insert(codei+nodelbl+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+					else:
+						figdata.insert(codei+nodelbl+1,"\\draw[->,rounded corners] ("+str(nodelbl)+") -- ("+str(xy[0][nodelbl])+","+str(xy[1][nodelbl])+"-"+str(diffy)+") -- ("+str(flw)+");\n")
+
 
 	#Create/append new target file
 	tar = open(target+".tex","a")

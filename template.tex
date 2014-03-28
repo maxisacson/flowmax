@@ -5,9 +5,18 @@
 \PreviewEnvironment{tikzpicture}
 \usetikzlibrary{calc,positioning,shapes.geometric,shapes.symbols,shapes.misc}
 \tikzset{
-    start-stop/.style={
+    stop/.style={
         draw,
         fill = red,
+        fill opacity=0.3,
+        draw opacity=1,
+        text opacity=1,
+        rectangle,
+        rounded corners,
+    },
+    start/.style={
+        draw,
+        fill = green,
         fill opacity=0.3,
         draw opacity=1,
         text opacity=1,
@@ -29,7 +38,8 @@
         draw opacity=1,
         text opacity=1,
         diamond,
-        aspect=1.6
+        aspect=1.6,
+        font = \tiny,
     },
 }
 \begin{document}
