@@ -1,9 +1,0 @@
-node 0 {Start here} symbol start connect 1;
-node 1 {Yes or no?} symbol query connect 2,3;
-node 2 {You said yes} symbol action connect 6;
-node 3 {You said no, why?} symbol query connect 4,5;
-node 4 {Oh I see} symbol action connect 8;
-node 8 {That's fine} symbol action connect 6;
-node 5 {Lol that is weird} symbol action connect 7;
-node 7 {You are weird} symbol action connect 6;
-node 6 {It ends here} symbol stop;
