@@ -106,6 +106,6 @@ def makeFig(nodes,target):
 	#Write in the target
 	with open(target+".tex","w") as file:
 		file.writelines(figdata)
-
+		print target + ".tex written!"
 
 
