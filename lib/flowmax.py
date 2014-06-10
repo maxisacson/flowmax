@@ -35,14 +35,14 @@ def connect(n1, n2):
 
 
 def isConnectedByLabel(n1, n2):
-	if (n1.isConnectedToByLabel(n2) and n2.isConnectedToByLabel(n1)):
+	if n1.isConnectedToByLabel(n2) and n2.isConnectedToByLabel(n1):
 		return True
 	else:
 		return False
 
 
 def isConnectedByIndex(n1, n2):
-	if (n1.isConnectedToByIndex(n2) and n2.isConnectedToByIndex(n1)):
+	if n1.isConnectedToByIndex(n2) and n2.isConnectedToByIndex(n1):
 		return True
 	else:
 		return False
@@ -62,14 +62,14 @@ def flow(n1, n2):
 
 
 def isFlowsToByLabel(n1, n2):
-	if (n1.isFlowsToByLabel(n2)):
+	if n1.isFlowsToByLabel(n2):
 		return True
 	else:
 		return False
 
 
 def isFlowsToByIndex(n1, n2):
-	if (n1.isFlowsToByIndex(n2)):
+	if n1.isFlowsToByIndex(n2):
 		return True
 	else:
 		return False
@@ -77,13 +77,13 @@ def isFlowsToByIndex(n1, n2):
 
 def getNodeByLabel(i):
 	for n in node.nodes:
-		if (n.label == i):
+		if n.label == i:
 			return n
 
 
 def getNodeByIndex(i):
 	for n in node.nodes:
-		if (n.index == i):
+		if n.index == i:
 			return n
 
 
@@ -137,7 +137,7 @@ def djikstra():
 		for i in unvisited:
 			minDist = float('inf')
 			n = getNodeByIndex(i)
-			if (n.dist < minDist):
+			if n.dist < minDist:
 					current = n.index
 					minDist = n.dist
 
@@ -271,7 +271,7 @@ class node(object):
 		super(node, self).__init__()
 		self.label = label
 		self.text = text
-		if (symbol in validSymbols):
+		if symbol in validSymbols:
 			self.symbol = symbol
 		else:
 			print("*** Symbol '" + symbol + "' is NOT a valid symbol!")
