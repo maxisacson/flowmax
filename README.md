@@ -10,7 +10,7 @@ INSTALLATION
 ------------
 Download the package using `$ git clone https://github.com/maxisacson/flowmax.git` and move to the created directory `$ cd flowmax`. Now run `install.sh`, like so: `$ ./install.sh`. This creates the executable `bin/flowmax` and the script `setup.sh`. Now you need to set up your environment by sourcing `setup.sh`, do this by `$ source setup.sh`. This needs to be done every time you want to run `flowmax` in a newly started shell. To skip the need for this you can add something like `source /path/to/flowmax/setup.sh` to your `.bashrc`-file, in my case it would be `source ~/flowmax/setup.sh`, which probably works for you as well if you installed in your home directory.
 
-Note that this package requires either ```latex XeLaTeX`` or ```latex PdfLaTeX``` to be installed.
+Note that this package requires either XeLaTeX or PdfLaTeX to be installed.
 
 Usage
 -----
@@ -32,7 +32,7 @@ tikzexport.makeFig(flowmax.node.nodes,"target")
 ```
 or simply `$ flowmax myfile.fm` in a `BASH`-like shell environment.
 
-This will give you a pdf file, which is compiled by either `pdflatex` or `xelatex`
+This will give you a pdf file containing the flow chart, which is compiled by either `xelatex` or `pdflatex`.
 
 TODO
 ----
