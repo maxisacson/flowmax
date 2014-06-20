@@ -28,8 +28,8 @@ def getxy(nodes):
 		# Grab some info about each node
 		nodei = n.index
 		nodepos = findHeight(flowmax.layers, nodei)
-		x.append(xsize*nodepos[1])
-		y.append(-ysize*nodepos[0])
+		x.append(xsize * nodepos[1])
+		y.append(-ysize * nodepos[0])
 	return [x, y]
 
 
@@ -66,10 +66,9 @@ def makeFig(nodes, target):
 		nodeto = n.flowsToByLabel
 		nodearrowlabel = n.routeLabels
 		# Create nodes
-		figdata.insert(nodecodei + nodei,
-						"\\node[" + nodeshape + "] at (" + str(xy[0][nodelbl]) +
-						"," + str(xy[1][nodelbl]) + ") (" + str(nodelbl) +
-						") {" + nodetext + "};\n")
+		figdata.insert(nodecodei + nodei, "\\node[%s] at (%d, %d) (%d) {%s};\n"
+						% (nodeshape, xy[0][nodelbl], xy[1][nodelbl],
+							nodelbl, nodetext))
 		arlabelstrings = ['']*nodetot
 
 		if len(nodearrowlabel) > 0:
@@ -89,38 +88,31 @@ def makeFig(nodes, target):
 			if nodelbl != flw:
 				if (abs(diffy) == ysize or abs(diffx) == xsize):
 					figdata.insert(arri + nodei + 1,
-									"\\draw[->] (" + str(nodelbl) +
-									") -- (" + str(flw) +
-									") node [midway," + fillstring +
-									",tiny] {" + arlabelstrings[flw] +
-									"} ;\n")
+						"\\draw[->](%d) -- (%d) node [midway, %s, tiny] {%s};\n"
+						% (nodelbl, flw, fillstring, arlabelstrings[flw]))
 				elif diffy != 0:
 					if diffx == 0:
 						figdata.insert(arri + nodei + 1,
-										"\\draw[->,rounded corners] (" + str(nodelbl) +
-										") -- (" + str(xy[0][nodelbl]) +
-										"-" + str(ysize) + "," + str(xy[1][nodelbl]) +
-										") -- (" + str(xy[0][nodelbl]) +
-										"-" + str(ysize) + "," + str(xy[1][nodelbl]) +
-										"-" + str(diffy) + ") node [midway," + fillstring +
-										",tiny] {" + arlabelstrings[flw] +
-										"} -- (" + str(flw) + ");\n")
+							"\\draw[->, rounded corners]\
+							(%d) -- (%d-%d, %d) -- (%d-%d, %d-%d)\
+							node [midway, %s, tiny] {%s} -- (%d);\n"
+							% (nodelbl, xy[0][nodelbl], ysize, xy[1][nodelbl],
+								xy[0][nodelbl], ysize, xy[1][nodelbl],
+								diffy, fillstring, arlabelstrings[flw], flw))
 					elif diffx > 0:
 						figdata.insert(arri + nodei + 1,
-										"\\draw[->,rounded corners] (" + str(nodelbl) +
-										") -- (" + str(xy[0][nodelbl]) +
-										"," + str(xy[1][nodelbl]) +
-										"-" + str(diffy) + ") node [midway," + fillstring +
-										",tiny] {" + arlabelstrings[flw] +
-										"} -- (" + str(flw) + ");\n")
+							"\\draw[->, rounded corners]\
+							(%d) -- (%d, %d-%d) node\
+							[midway, %s, tiny] {%s} -- (%d);\n"
+							% (nodelbl, xy[0][nodelbl], xy[1][nodelbl],
+								diffy, fillstring, arlabelstrings[flw], flw))
 					else:
 						figdata.insert(arri + nodei + 1,
-										"\\draw[->,rounded corners] (" + str(nodelbl) +
-											") -- (" + str(xy[0][nodelbl]) +
-											"," + str(xy[1][nodelbl]) +
-											"-" + str(diffy) + ") node [midway," + fillstring +
-											",tiny] {" + arlabelstrings[flw] +
-											"} -- (" + str(flw) + ");\n")
+							"\\draw[->, rounded corners]\
+							(%d) -- (%d, %d-%d) node\
+							[mideway, %s, tiny] {%s} -- (%d);\n"
+							% (nodelbl, xy[0][nodelbl], xy[1][nodelbl],
+								diffy, fillstring, arlabelstrings[flw], flw))
 	#Create/append new target file
 	tar = open(target + ".tex", "a")
 	tar.close()
@@ -135,5 +127,3 @@ def makeFig(nodes, target):
 	except Exception:
 		os.system("pdflatex -interaction=nonstopmode " + target + ".tex")
 		os.system("rm *.log *.aux *.tex")
-
-

@@ -242,16 +242,16 @@ def readFrom(template):
 
 def printNodes():
 	for n in node.nodes:
-		print("Node " + str(n.label) + " with content '" + n.text +
-				"' of type '" + n.symbol + "' is connected to node(s) " +
-				str(n.connectedToByLabel) + " and flows to node(s) " +
-				str(n.flowsToByLabel) + " (" + str(n.routeLabels) + ") with distance " +
-				str(n.dist) + " from start.")
+		print('''Node \'%s\' with content \'%s\' of type \'%s\'
+				is connected to node(s) %s and flows to node(s) %s (%s)
+				with distance %s from start.'''
+				% (n.label, n.text, n.symbol, n.connectedToByLabel,
+					n.flowsToByLabel, n.routeLabels, n.dist))
 
 
 def run(_file):
 	template = open(_file, 'r')
-	print('Running over ' + template.name)
+	print('Running over %s' % template.name)
 	container = readFrom(template)
 	createNodes(container)
 	djikstra()
@@ -274,7 +274,7 @@ class node(object):
 		if symbol in validSymbols:
 			self.symbol = symbol
 		else:
-			print("*** Symbol '" + symbol + "' is NOT a valid symbol!")
+			print("*** Symbol \'%s\' is NOT a valid symbol!" % symbol)
 			sys.exit()
 		self.x = x
 		self.y = y
